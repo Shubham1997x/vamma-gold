@@ -8,7 +8,7 @@ export default async function EditProductPage({
   params: Promise<{ code: string }>;
 }) {
   const { code } = await params;
-  const product = getProduct(decodeURIComponent(code));
+  const product = await getProduct(decodeURIComponent(code));
   if (!product) notFound();
 
   return (

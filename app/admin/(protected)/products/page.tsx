@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminProductsPage() {
-  const products = listProducts();
+  const products = await listProducts();
 
   return (
     <div>

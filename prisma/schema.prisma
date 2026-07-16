@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Product {
+  code        String         @id
+  name        String
+  category    String
+  subcategory String
+  grossWeight Float?
+  netWeight   Float?
+  size        String?
+  images      ProductImage[]
+}
+
+model ProductImage {
+  id          Int     @id @default(autoincrement())
+  productCode String
+  product     Product @relation(fields: [productCode], references: [code], onDelete: Cascade)
+  path        String
+  sortOrder   Int
+
+  @@index([productCode])
+}
+
+model SiteSettings {
+  id              Int    @id @default(1)
+  name            String
+  tagline         String
+  whatsappNumber  String
+  whatsappDisplay String
+  enquiryEmail    String
+  website         String
+}
+
+model Enquiry {
+  id          Int      @id @default(autoincrement())
+  productCode String?
+  productName String?
+  name        String
+  phone       String
+  email       String?
+  message     String?
+  status      String   @default("new")
+  createdAt   DateTime @default(now())
+}

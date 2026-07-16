@@ -28,7 +28,7 @@ function parseSite(body: unknown): Site | null {
 
 export async function GET() {
   if (!(await getSession())) return Response.json({ error: "Unauthorized" }, { status: 401 });
-  return Response.json(getSiteSettings());
+  return Response.json(await getSiteSettings());
 }
 
 export async function PUT(request: Request) {
@@ -37,6 +37,6 @@ export async function PUT(request: Request) {
   const site = parseSite(await request.json().catch(() => null));
   if (!site) return Response.json({ error: "Invalid site data" }, { status: 400 });
 
-  updateSiteSettings(site);
+  await updateSiteSettings(site);
   return Response.json(site);
 }

@@ -15,7 +15,7 @@ export async function PATCH(
     return Response.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  updateEnquiryStatus(Number(id), body.status);
+  await updateEnquiryStatus(Number(id), body.status);
   return Response.json({ ok: true });
 }
 
@@ -26,6 +26,6 @@ export async function DELETE(
   if (!(await getSession())) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  deleteEnquiry(Number(id));
+  await deleteEnquiry(Number(id));
   return Response.json({ ok: true });
 }

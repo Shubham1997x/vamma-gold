@@ -3,7 +3,7 @@ import { DeleteButton } from "@/components/admin/delete-button";
 import { NewUserForm } from "@/components/admin/new-user-form";
 
 export default async function AdminUsersPage() {
-  const users = listAdminUsers();
+  const users = await listAdminUsers();
 
   return (
     <div>

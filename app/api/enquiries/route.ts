@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Name and phone are required" }, { status: 400 });
   }
 
-  createEnquiry({
+  await createEnquiry({
     productCode: typeof body.productCode === "string" ? body.productCode : null,
     productName: typeof body.productName === "string" ? body.productName : null,
     name: body.name.trim(),

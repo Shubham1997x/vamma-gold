@@ -6,8 +6,7 @@ import { getSiteSettings, listProducts } from "@/lib/db/queries";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const site = getSiteSettings();
-  const products = listProducts();
+  const [site, products] = await Promise.all([getSiteSettings(), listProducts()]);
 
   return (
     <>

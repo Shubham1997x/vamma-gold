@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const site = getSiteSettings();
+  const site = await getSiteSettings();
   return {
     title: `${site.name} — ${site.tagline}`,
     description:

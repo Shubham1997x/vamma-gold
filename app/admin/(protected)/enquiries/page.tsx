@@ -3,7 +3,7 @@ import { EnquiryStatusSelect } from "@/components/admin/enquiry-status-select";
 import { DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminEnquiriesPage() {
-  const enquiries = listEnquiries();
+  const enquiries = await listEnquiries();
 
   return (
     <div>

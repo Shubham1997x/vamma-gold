@@ -2,7 +2,7 @@ import { getSiteSettings } from "@/lib/db/queries";
 import { SiteSettingsForm } from "@/components/admin/site-settings-form";
 
 export default async function AdminSitePage() {
-  const site = getSiteSettings();
+  const site = await getSiteSettings();
 
   return (
     <div>

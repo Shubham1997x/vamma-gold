@@ -2,9 +2,11 @@ import Link from "next/link";
 import { getSiteSettings, listEnquiries, listProducts } from "@/lib/db/queries";
 
 export default async function AdminDashboardPage() {
-  const products = listProducts();
-  const enquiries = listEnquiries();
-  const site = getSiteSettings();
+  const [products, enquiries, site] = await Promise.all([
+    listProducts(),
+    listEnquiries(),
+    getSiteSettings(),
+  ]);
   const newEnquiries = enquiries.filter((e) => e.status === "new").length;
 
   const cards = [

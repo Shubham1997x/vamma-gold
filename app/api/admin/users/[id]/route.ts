@@ -11,13 +11,13 @@ export async function DELETE(
   const { id } = await params;
   const userId = Number(id);
 
-  if (countAdminUsers() <= 1) {
+  if ((await countAdminUsers()) <= 1) {
     return Response.json({ error: "Cannot delete the last remaining admin" }, { status: 400 });
   }
   if (userId === session.userId) {
     return Response.json({ error: "Cannot delete your own account while logged in" }, { status: 400 });
   }
 
-  deleteAdminUser(userId);
+  await deleteAdminUser(userId);
   return Response.json({ ok: true });
 }

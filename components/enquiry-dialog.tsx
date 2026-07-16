@@ -25,6 +25,8 @@ export function EnquiryDialog({
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const firstFieldRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,10 +41,12 @@ export function EnquiryDialog({
     };
   }, [open, onClose]);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setSubmitting(true);
+    setError("");
 
-    fetch("/api/enquiries", {
+    const res = await fetch("/api/enquiries", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -53,22 +57,14 @@ export function EnquiryDialog({
         email: email || undefined,
         message: message || undefined,
       }),
-    }).catch(() => {
-      // Non-fatal — the mailto fallback below still reaches the store.
-    });
+    }).catch(() => null);
 
-    const lines = [
-      `Product: ${product.name} (${product.code})`,
-      `Name: ${name}`,
-      `Phone: ${phone}`,
-      email && `Email: ${email}`,
-      message && `Message: ${message}`,
-    ].filter(Boolean);
-    const href = `mailto:${site.enquiryEmail}?subject=${encodeURIComponent(
-      `Enquiry: ${product.name} (${product.code})`
-    )}&body=${encodeURIComponent(lines.join("\n"))}`;
-    window.location.href = href;
-    setSent(true);
+    setSubmitting(false);
+    if (res?.ok) {
+      setSent(true);
+    } else {
+      setError("Couldn't send your enquiry — please try again or message us on WhatsApp.");
+    }
   }
 
   return (
@@ -117,12 +113,10 @@ export function EnquiryDialog({
 
             {sent ? (
               <div className="mt-6 text-center">
-                <p className="font-display text-xl text-ink">
-                  Your email app has opened with the enquiry
-                </p>
+                <p className="font-display text-xl text-ink">Enquiry sent</p>
                 <p className="mt-2 text-sm text-clay">
-                  Press send there to reach us, or message us directly on
-                  WhatsApp at {site.whatsappDisplay}.
+                  We&apos;ve received your enquiry and will get back to you shortly, or
+                  message us directly on WhatsApp at {site.whatsappDisplay}.
                 </p>
                 <Button variant="gold" size="sm" className="mt-5" onClick={onClose}>
                   Done
@@ -184,12 +178,14 @@ export function EnquiryDialog({
                     className={fieldClass}
                   />
                 </div>
+                {error && <p className="text-sm text-red-700">{error}</p>}
+
                 <div className="flex justify-end gap-2 pt-1">
                   <Button type="button" variant="ghost" size="sm" className="text-clay hover:bg-ivory-soft hover:text-ink" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button type="submit" size="sm">
-                    Send Enquiry
+                  <Button type="submit" size="sm" disabled={submitting}>
+                    {submitting ? "Sending…" : "Send Enquiry"}
                   </Button>
                 </div>
               </form>

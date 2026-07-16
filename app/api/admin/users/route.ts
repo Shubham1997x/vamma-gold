@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 
 export async function GET() {
   if (!(await getSession())) return Response.json({ error: "Unauthorized" }, { status: 401 });
-  return Response.json(listAdminUsers());
+  return Response.json(await listAdminUsers());
 }
 
 export async function POST(request: Request) {
@@ -24,13 +24,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const existing = db
-    .prepare("SELECT id FROM admin_users WHERE username = ?")
-    .get(body.username.trim());
+  const existing = await db.adminUser.findUnique({ where: { username: body.username.trim() } });
   if (existing) {
     return Response.json({ error: "Username already exists" }, { status: 409 });
   }
 
-  const user = createAdminUser(body.username.trim(), body.password);
+  const user = await createAdminUser(body.username.trim(), body.password);
   return Response.json(user, { status: 201 });
 }

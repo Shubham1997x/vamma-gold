@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Username and password are required" }, { status: 400 });
   }
 
-  const user = verifyAdminLogin(body.username, body.password);
+  const user = await verifyAdminLogin(body.username, body.password);
   if (!user) {
     return Response.json({ error: "Invalid username or password" }, { status: 401 });
   }
