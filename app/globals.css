@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Vamma Gold palette — velvet jewellery-box maroon, ivory, champagne gold */
+  --maroon: #33100f;
+  --maroon-deep: #230a09;
+  --ivory: #faf6ee;
+  --ivory-soft: #f3ecdd;
+  --gold: #c6a14b;
+  --gold-deep: #96742a;
+  --champagne: #efd9a0;
+  --ink: #2b2118;
+  --clay: #8a7a66;
+  --whatsapp: #128c4b;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-maroon: var(--maroon);
+  --color-maroon-deep: var(--maroon-deep);
+  --color-ivory: var(--ivory);
+  --color-ivory-soft: var(--ivory-soft);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-champagne: var(--champagne);
+  --color-ink: var(--ink);
+  --color-clay: var(--clay);
+  --color-whatsapp: var(--whatsapp);
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-manrope);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-manrope), sans-serif;
+}
+
+/* Shimmering gold headline — the light sweep of a polished bangle */
+.gold-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--gold-deep) 20%,
+    var(--champagne) 40%,
+    #fff3cf 50%,
+    var(--champagne) 60%,
+    var(--gold-deep) 80%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gold-shimmer {
+    animation: none;
+  }
+}
+
+/* Hairline gold rule used under section headings */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
 }
