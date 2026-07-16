@@ -40,6 +40,9 @@ yarn-error.log*
 /prisma/*.db-shm
 /prisma/*.db-wal
 
+# runtime image uploads (served by app/images/[filename]/route.ts)
+/uploads
+
 # vercel
 .vercel
 

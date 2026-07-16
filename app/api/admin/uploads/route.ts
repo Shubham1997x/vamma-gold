@@ -22,7 +22,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "No files provided" }, { status: 400 });
   }
 
-  const imagesDir = path.join(process.cwd(), "public", "images");
+  // Runtime uploads must live outside public/ — in production Next only serves
+  // public/ assets that existed at build time, so files written there 404.
+  // /images/* requests fall through to app/images/[filename]/route.ts instead.
+  const imagesDir = path.join(process.cwd(), "uploads");
   await mkdir(imagesDir, { recursive: true });
 
   const paths: string[] = [];
