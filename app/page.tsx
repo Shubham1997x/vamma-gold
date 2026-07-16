@@ -1,15 +1,20 @@
 import { Navbar, WhatsAppIcon } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { Catalog } from "@/components/catalog";
-import { site } from "@/lib/site";
+import { getSiteSettings, listProducts } from "@/lib/db/queries";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const site = getSiteSettings();
+  const products = listProducts();
+
   return (
     <>
-      <Navbar />
+      <Navbar site={site} />
       <main className="flex-1">
-        <Hero />
-        <Catalog />
+        <Hero site={site} />
+        <Catalog products={products} site={site} />
       </main>
       <footer className="border-t border-gold/25 bg-maroon-deep py-10 text-center">
         <p className="font-display text-2xl font-semibold text-champagne">

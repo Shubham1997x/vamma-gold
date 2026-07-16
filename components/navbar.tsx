@@ -1,4 +1,4 @@
-import { site } from "@/lib/site";
+import type { Site } from "@/lib/site";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -10,13 +10,13 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export { WhatsAppIcon };
 
-export function Navbar() {
+export function Navbar({ site }: { site: Site }) {
   return (
     <header className="sticky top-0 z-50 border-b border-gold/25 bg-maroon-deep/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <a href="#" className="flex items-baseline gap-2">
           <span className="font-display text-2xl font-semibold tracking-wide text-champagne">
-            Vamma Gold
+            Samor Gold
           </span>
           <span className="hidden text-[11px] uppercase tracking-[0.22em] text-gold sm:inline">
             {site.tagline}

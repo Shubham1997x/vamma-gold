@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
-import { site } from "@/lib/site";
+import { getSiteSettings } from "@/lib/db/queries";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -14,11 +14,14 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: `${site.name} — ${site.tagline}`,
-  description:
-    "Explore the Vamma Gold catalogue of 916 hallmarked gold jewellery. Browse rings and more, then enquire directly on WhatsApp.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const site = getSiteSettings();
+  return {
+    title: `${site.name} — ${site.tagline}`,
+    description:
+      "Explore the Vamma Gold catalogue of 916 hallmarked gold jewellery. Browse rings and more, then enquire directly on WhatsApp.",
+  };
+}
 
 export default function RootLayout({
   children,

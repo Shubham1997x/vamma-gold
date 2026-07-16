@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { site } from "@/lib/site";
+import type { Site } from "@/lib/site";
 
-export function Hero() {
+export function Hero({ site }: { site: Site }) {
   const reduceMotion = useReducedMotion();
   const fadeUp = (delay: number) => ({
     initial: reduceMotion ? false : { opacity: 0, y: 18 },

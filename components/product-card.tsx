@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Product } from "@/lib/products";
-import { site } from "@/lib/site";
+import type { Site } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/components/navbar";
 import { EnquiryDialog } from "@/components/enquiry-dialog";
@@ -23,12 +23,36 @@ function specs(product: Product): { label: string; value: string }[] {
   ].filter(Boolean) as { label: string; value: string }[];
 }
 
-export function ProductCard({ product, index }: { product: Product; index: number }) {
+export function ProductCard({
+  product,
+  index,
+  site,
+}: {
+  product: Product;
+  index: number;
+  site: Site;
+}) {
   const reduceMotion = useReducedMotion();
   const [enquiryOpen, setEnquiryOpen] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
 
   const enquiryText = `Hello ${site.name}, I would like to enquire about ${product.name} (${product.code}).`;
   const whatsappHref = `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(enquiryText)}`;
+
+  const images = product.images;
+  const hasGallery = images.length > 1;
+
+  function showPrev(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveImage((i) => (i - 1 + images.length) % images.length);
+  }
+
+  function showNext(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setActiveImage((i) => (i + 1) % images.length);
+  }
 
   return (
     <motion.article
@@ -40,12 +64,45 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
     >
       <div className="relative aspect-square overflow-hidden bg-ivory-soft">
         <Image
-          src={product.image}
+          src={images[activeImage]}
           alt={`${product.name} — ${product.code}`}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
+
+        {hasGallery && (
+          <>
+            <button
+              onClick={showPrev}
+              aria-label="Previous image"
+              className="absolute left-2 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-maroon-deep/60 text-champagne opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="size-4" aria-hidden>
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+            <button
+              onClick={showNext}
+              aria-label="Next image"
+              className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-maroon-deep/60 text-champagne opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="size-4" aria-hidden>
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+            <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1.5">
+              {images.map((img, i) => (
+                <span
+                  key={img}
+                  className={`size-1.5 rounded-full transition-colors ${
+                    i === activeImage ? "bg-champagne" : "bg-champagne/40"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
@@ -108,6 +165,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
 
       <EnquiryDialog
         product={product}
+        site={site}
         open={enquiryOpen}
         onClose={() => setEnquiryOpen(false)}
       />

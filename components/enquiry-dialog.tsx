@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Product } from "@/lib/products";
-import { site } from "@/lib/site";
+import type { Site } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 
 const fieldClass =
@@ -11,10 +11,12 @@ const fieldClass =
 
 export function EnquiryDialog({
   product,
+  site,
   open,
   onClose,
 }: {
   product: Product;
+  site: Site;
   open: boolean;
   onClose: () => void;
 }) {
@@ -39,6 +41,22 @@ export function EnquiryDialog({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    fetch("/api/enquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productCode: product.code,
+        productName: product.name,
+        name,
+        phone,
+        email: email || undefined,
+        message: message || undefined,
+      }),
+    }).catch(() => {
+      // Non-fatal — the mailto fallback below still reaches the store.
+    });
+
     const lines = [
       `Product: ${product.name} (${product.code})`,
       `Name: ${name}`,

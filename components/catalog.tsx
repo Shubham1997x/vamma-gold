@@ -1,21 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { categories, products, subcategoriesOf } from "@/lib/products";
+import { categoriesOf, subcategoriesOf, type Product } from "@/lib/products";
+import type { Site } from "@/lib/site";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/product-card";
 
 const ALL = "All";
 
-export function Catalog() {
+export function Catalog({ products, site }: { products: Product[]; site: Site }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState(ALL);
   const [subcategory, setSubcategory] = useState(ALL);
 
+  const categories = useMemo(() => categoriesOf(products), [products]);
+
   const subcategories = useMemo(
-    () => (category === ALL ? [] : subcategoriesOf(category)),
-    [category]
+    () => (category === ALL ? [] : subcategoriesOf(products, category)),
+    [products, category]
   );
 
   const filtered = useMemo(() => {
@@ -29,7 +32,7 @@ export function Catalog() {
         .toLowerCase()
         .includes(q);
     });
-  }, [query, category, subcategory]);
+  }, [products, query, category, subcategory]);
 
   function pickCategory(next: string) {
     setCategory(next);
@@ -91,7 +94,7 @@ export function Catalog() {
       ) : (
         <div className="mb-20 mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {filtered.map((p, i) => (
-            <ProductCard key={p.code} product={p} index={i} />
+            <ProductCard key={p.code} product={p} index={i} site={site} />
           ))}
         </div>
       )}
